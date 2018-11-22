@@ -12,17 +12,28 @@
 
     <bean id="dateFormat" class="java.text.DateFormat" factory-method="getDateTimeInstance"/>
 
+    <bean id="fileEventLogger" class="FileEventLogger" init-method="init">
+        <constructor-arg value="log.txt"/>
+    </bean>
+
+    <bean id="cacheFileEventLogger" class="CacheFileEventLogger" destroy-method="destroy" init-method="init">
+        <constructor-arg value="2"/>
+        <constructor-arg value="log.txt"/>
+    </bean>
+
     <bean id="event" class="Event" scope="prototype">
         <constructor-arg>
             <bean class="java.util.Date"/>
         </constructor-arg>
+        <constructor-arg ref="dateFormat"/>
     </bean>
 
-    <bean id="eventLogger" class="ConsoleEventLogger"/>
+    <bean id="consoleEventLogger" class="ConsoleEventLogger"/>
 
     <bean id="app" class="App">
         <constructor-arg ref="client"/>
-        <constructor-arg ref="eventLogger"/>
+        <constructor-arg ref="cacheFileEventLogger"/>
+        <constructor-arg ref="event"/>
     </bean>
 
 </beans>
